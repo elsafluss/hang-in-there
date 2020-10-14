@@ -103,9 +103,48 @@ var currentPoster;
 
 // event listeners go here 👇
 
+
+//generate random poster upon inital loading
+document.querySelector("body").onload = function() {
+  document.getElementsByClassName("poster-img")[0].src = images[getRandomIndex(images)];
+  document.getElementsByClassName("poster-title")[0].innerHTML = titles[getRandomIndex(titles)];
+  document.getElementsByClassName("poster-quote")[0].innerHTML = quotes[getRandomIndex(quotes)];
+};
+
+
+
+//generate random poster upon random poster button click
+document.getElementsByClassName("show-random")[0].onclick = function() {
+  document.getElementsByClassName("poster-img")[0].src = images[getRandomIndex(images)];
+  document.getElementsByClassName("poster-title")[0].innerHTML = titles[getRandomIndex(titles)];
+  document.getElementsByClassName("poster-quote")[0].innerHTML = quotes[getRandomIndex(quotes)];
+};
+
+/*document.getElementsByClassName("poster-form")[0].querySelector("form").onsubmit = function(event) {
+    event.preventDefault();
+    debugger;
+    console.log(event);
+};
+
+
+
+
+//hide random poster and unhide custom poster form
+document.getElementsByClassName("show-form")[0].onclick = function() {
+  //document.getElementsByClassName("poster")[0].display.style === "none!important";
+  document.getElementsByClassName("main-poster")[0].classList.toggle("hidden");
+  document.getElementsByClassName("poster-form")[0].classList.toggle("hidden");
+};*/
+
+
+
 // functions and event handlers go here 👇
 // (we've provided one for you to get you started)!
 function getRandomIndex(array) {
   return Math.floor(Math.random() * array.length);
 }
+/*create a class Poster {
+  constructor(image,title,quote){
 
+  }
+}*/
