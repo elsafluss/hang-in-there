@@ -103,39 +103,49 @@ var currentPoster;
 
 // event listeners go here 👇
 
-
 //generate random poster upon inital loading
-document.querySelector("body").onload = function() {
+document.querySelector("body").onload = function () {
   document.getElementsByClassName("poster-img")[0].src = images[getRandomIndex(images)];
   document.getElementsByClassName("poster-title")[0].innerHTML = titles[getRandomIndex(titles)];
   document.getElementsByClassName("poster-quote")[0].innerHTML = quotes[getRandomIndex(quotes)];
 };
-
-
 
 //generate random poster upon random poster button click
-document.getElementsByClassName("show-random")[0].onclick = function() {
+document.getElementsByClassName("show-random")[0].onclick = function () {
   document.getElementsByClassName("poster-img")[0].src = images[getRandomIndex(images)];
   document.getElementsByClassName("poster-title")[0].innerHTML = titles[getRandomIndex(titles)];
   document.getElementsByClassName("poster-quote")[0].innerHTML = quotes[getRandomIndex(quotes)];
 };
 
-/*document.getElementsByClassName("poster-form")[0].querySelector("form").onsubmit = function(event) {
-    event.preventDefault();
-    debugger;
-    console.log(event);
-};
-
-
-
-
-//hide random poster and unhide custom poster form
-document.getElementsByClassName("show-form")[0].onclick = function() {
-  //document.getElementsByClassName("poster")[0].display.style === "none!important";
+//switch to poster create form on "make your own poster" button click
+document.getElementsByClassName("show-form")[0].onclick = function () {
   document.getElementsByClassName("main-poster")[0].classList.toggle("hidden");
   document.getElementsByClassName("poster-form")[0].classList.toggle("hidden");
-};*/
+};
 
+//creates user-poster on "show my poster" button click
+document.getElementsByClassName("poster-form")[0].querySelector("form").onsubmit = function (event) {
+  event.preventDefault();
+  document.getElementsByClassName("main-poster")[0].classList.toggle("hidden"); //toggles main page and form
+  document.getElementsByClassName("poster-form")[0].classList.toggle("hidden");
+  // debugger;
+  // console.log(event);
+  var urlInput = document.querySelector("#poster-image-url").value //the input for the url field
+  var titleInput = document.querySelector("#poster-title").value //the input for the title field
+  var quoteInput = document.querySelector("#poster-quote").value //the input for the quote field
+  var customPoster = new Poster(urlInput, titleInput, quoteInput)
+  images.push(customPoster.imageURL) //adds url field input into url array
+  titles.push(customPoster.titleInput) //adds title field input into title array
+  quotes.push(customPoster.quoteInput) //adds quote field input into quote array
+  console.log(customPoster.id) //can access that specific poster by this id
+  document.getElementsByClassName("poster-img")[0].src = urlInput; //displays user image on main page
+  document.getElementsByClassName("poster-title")[0].innerHTML = titleInput; //displays user title on main page
+  document.getElementsByClassName("poster-quote")[0].innerHTML = quoteInput; //displays user quote on main page
+}
+
+savedPosters.push(customPoster) //adds poster into saved posters array on "save this poster" button push
+
+//display the poster that was just created
 
 
 // functions and event handlers go here 👇
@@ -143,8 +153,11 @@ document.getElementsByClassName("show-form")[0].onclick = function() {
 function getRandomIndex(array) {
   return Math.floor(Math.random() * array.length);
 }
-/*create a class Poster {
-  constructor(image,title,quote){
-
-  }
-}*/
+// class Poster {
+//   constructor(imageURL, title, quote) {
+//     this.id = Date.now();
+//     this.imageURL = imageURL;
+//     this.title = title;
+//     this.quote = quote;
+//   }
+// }
