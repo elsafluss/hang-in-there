@@ -1,4 +1,11 @@
 // query selector variables go here 👇
+function posterCreation(urlInput,titleInput,quoteInput,customPoster) {
+var urlInput = document.querySelector("#poster-image-url").value //the input for the url field
+var titleInput = document.querySelector("#poster-title").value //the input for the title field
+var quoteInput = document.querySelector("#poster-quote").value //the input for the quote field
+var customPoster = new Poster(urlInput, titleInput, quoteInput)
+return customPoster;
+}
 
 // we've provided you with some data to work with 👇
 var images = [
@@ -109,41 +116,84 @@ document.querySelector("body").onload = function () {
   document.getElementsByClassName("poster-title")[0].innerHTML = titles[getRandomIndex(titles)];
   document.getElementsByClassName("poster-quote")[0].innerHTML = quotes[getRandomIndex(quotes)];
 };
+//return user to main page upon nevermind take me back button click
+document.getElementsByClassName("show-main")[0].onclick = function () {
+  document.getElementsByClassName("main-poster")[0].classList.toggle("hidden");
+  document.getElementsByClassName("poster-form")[0].classList.toggle("hidden");
+}
 
 //generate random poster upon random poster button click
 document.getElementsByClassName("show-random")[0].onclick = function () {
   document.getElementsByClassName("poster-img")[0].src = images[getRandomIndex(images)];
   document.getElementsByClassName("poster-title")[0].innerHTML = titles[getRandomIndex(titles)];
   document.getElementsByClassName("poster-quote")[0].innerHTML = quotes[getRandomIndex(quotes)];
+  document.getElementsByClassName("save-poster")[0].disabled = false;
 };
 
 //switch to poster create form on "make your own poster" button click
 document.getElementsByClassName("show-form")[0].onclick = function () {
   document.getElementsByClassName("main-poster")[0].classList.toggle("hidden");
   document.getElementsByClassName("poster-form")[0].classList.toggle("hidden");
+  document.getElementsByClassName("save-poster")[0].disabled = false;
 };
 
 //creates user-poster on "show my poster" button click
 document.getElementsByClassName("poster-form")[0].querySelector("form").onsubmit = function (event) {
   event.preventDefault();
-  document.getElementsByClassName("main-poster")[0].classList.toggle("hidden"); //toggles main page and form
-  document.getElementsByClassName("poster-form")[0].classList.toggle("hidden");
-  // debugger;
-  // console.log(event);
   var urlInput = document.querySelector("#poster-image-url").value //the input for the url field
   var titleInput = document.querySelector("#poster-title").value //the input for the title field
   var quoteInput = document.querySelector("#poster-quote").value //the input for the quote field
-  var customPoster = new Poster(urlInput, titleInput, quoteInput)
-  images.push(customPoster.imageURL) //adds url field input into url array
-  titles.push(customPoster.titleInput) //adds title field input into title array
-  quotes.push(customPoster.quoteInput) //adds quote field input into quote array
-  console.log(customPoster.id) //can access that specific poster by this id
+  var customPoster = new Poster(urlInput, titleInput, quoteInput);
+  document.getElementsByClassName("main-poster")[0].classList.toggle("hidden"); //toggles main page and form
+  document.getElementsByClassName("poster-form")[0].classList.toggle("hidden");
   document.getElementsByClassName("poster-img")[0].src = urlInput; //displays user image on main page
   document.getElementsByClassName("poster-title")[0].innerHTML = titleInput; //displays user title on main page
   document.getElementsByClassName("poster-quote")[0].innerHTML = quoteInput; //displays user quote on main page
-}
+ }
+//save user generated poster when save poster button is clicked
+document.getElementsByClassName("save-poster")[0].onclick = function () {
+  event.preventDefault();
+  // document.getElementsByClassName("poster-form")[0].classList.toggle("hidden");
+  document.getElementsByClassName("saved-posters")[0].classList.toggle("hidden");
+  images.push(document.getElementsByClassName("poster-img")[0].src) //add custom image to image array
+  titles.push(document.getElementsByClassName("poster-title")[0].innerHTML)  //add custom title to title array
+  quotes.push(document.getElementsByClassName("poster-quote")[0].innerHTML)  //add custom quote to quote array
+  var customPoster = new Poster(images[images.length-1], titles[titles.length-1], quotes[quotes.length-1]);
+  console.log(customPoster);
+  savedPosters.push(customPoster);
+  document.getElementsByClassName("save-poster")[0].disabled = true;
+ }
+//show saved posters upon show saved posters button click
+ // document.getElementsByClassName("show-saved")[0].onclick = function () {
+ //   document.getElementsByClassName("main-poster")[0].classList.toggle("hidden");
+ //   document.getElementsByClassName("saved-posters")[0].classList.toggle("hidden");
+ //   console.log(savedPosters[0].imageURL);
+ //   document.getElementsByClassName("saved-posters-grid")[0].innerHTML = `
+ //    <p>"Hello"</p>
+ //    <img src='savedPosters[0].imageURL'>
+ //   `;
+ //   document.getElementsByClassName("saved-posters-grid")[0].innerHTML = `
+ //    <p>
+ //    ${document.getElementsByClassName("poster-img")[0].src = savedPosters[0].imageURL};
+ //    ${document.getElementsByClassName("poster-title")[0].innerHTML = savedPosters[0].title};
+ //    ${document.getElementsByClassName("poster-quote")[0].innerHTML = savedPosters[0].quote};
+ //    </p>
+ //
+ //   `;
 
-savedPosters.push(customPoster) //adds poster into saved posters array on "save this poster" button push
+
+    //inserts the saved posters into the saved posters article
+ }
+//return to main after clicking back to main button
+ document.getElementsByClassName("back-to-main")[0].onclick = function () {
+   document.getElementsByClassName("main-poster")[0].classList.toggle("hidden");
+   document.getElementsByClassName("saved-posters")[0].classList.toggle("hidden");
+ }
+//console.log(customPoster.id) //can access that specific poster by this id
+
+
+
+//savedPosters.push(customPoster) //adds poster into saved posters array on "save this poster" button push
 
 //display the poster that was just created
 
