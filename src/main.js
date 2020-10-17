@@ -13,6 +13,9 @@ var savePosterButton = document.querySelector(".save-poster");
 var showSavedButton = document.querySelector(".show-saved");
 var takeMeBackButton = document.querySelector(".show-main");
 
+var savedPostersGrid = document.querySelector(".saved-posters-grid");
+var miniPosters = document.querySelector(".mini-posters");
+
 // we've provided you with some data to work with 👇
 var images = [
   "./assets/bees.jpg",
@@ -120,6 +123,20 @@ takeMeBackButton.addEventListener("click", takeMeBack);
 makePosterButton.addEventListener("click", goToPosterForm);
 showSavedButton.addEventListener("click", goToSavedPosters);
 savePosterButton.addEventListener("click", saveUserPoster);
+// miniPosters.addEventListener("dblclick", getPosterPosition);
+
+
+// savedPostersGrid.addEventListener("dblclick",test);
+
+// function miniposterLocation() {
+//   (".saved-posters-grid").on("dblclick", "div", function(e){
+//     getPosterPosition($(this).index());
+//     console.log("test");
+//     console.log("getPosterPosition");
+//   })
+// };
+
+
 
 //generate random poster upon inital loading
 document.querySelector("body").onload = function () {
@@ -140,19 +157,17 @@ document.getElementsByClassName("poster-form")[0].querySelector("form").onsubmit
   document.getElementsByClassName("poster-img")[0].src = urlInput; //displays user image on main page
   document.getElementsByClassName("poster-title")[0].innerHTML = titleInput; //displays user title on main page
   document.getElementsByClassName("poster-quote")[0].innerHTML = quoteInput; //displays user quote on main page
+
 }
 //save user generated poster when save poster button is clicked
 function saveUserPoster() {
   event.preventDefault();
-  hiddenSavedPageQuery.classList.toggle("hidden");
   images.push(imageQuery.src) //add custom image to image array
   titles.push(titleQuery.innerHTML) //add custom title to title array
   quotes.push(quoteQuery.innerHTML) //add custom quote to quote array
   var customPoster = new Poster(images[images.length - 1], titles[titles.length - 1], quotes[quotes.length - 1]);
   savedPosters.push(customPoster);
   document.getElementsByClassName("save-poster")[0].disabled = true;
-  createPosterForGrid(savedPosters); //we want this one here, not in the function goToSavedPosters
-  //but it kijrfluiel
 }
 
 function createPosterForGrid(savedPosters) {
@@ -163,8 +178,6 @@ function createPosterForGrid(savedPosters) {
 <h2>${savedPosters[i].title}</h2>
 <h4>${savedPosters[i].quote}</h4>
 </div>`
-    console.log("fourth time", savedPosters[i]) //they are being pushed to the array correctly
-    //but they are displaying the first poster twice
   }
 }
 
@@ -172,6 +185,7 @@ function createPosterForGrid(savedPosters) {
 document.getElementsByClassName("back-to-main")[0].onclick = function () {
   document.getElementsByClassName("main-poster")[0].classList.toggle("hidden");
   document.getElementsByClassName("saved-posters")[0].classList.toggle("hidden");
+  document.getElementsByClassName("saved-posters-grid")[0].innerHTML = [];
 }
 
 // functions and event handlers go here 👇
@@ -201,4 +215,13 @@ function goToPosterForm() {
 function goToSavedPosters() {
   mainPageQuery.classList.toggle("hidden");
   hiddenSavedPageQuery.classList.toggle("hidden");
+  createPosterForGrid(savedPosters);
+}
+function getPosterPosition(){
+  const colCount = 3;
+  const length = savedPosters.length -1;
+  const rowPosition = Math.floor(length/ colCount);
+  const colPosition = length % colCount;
+  var posterPostion = {row: rowPosition, column: colPosition};
+  console.log(posterPostion);
 }
