@@ -1,11 +1,17 @@
 // query selector variables go here 👇
-function posterCreation(urlInput,titleInput,quoteInput,customPoster) {
-var urlInput = document.querySelector("#poster-image-url").value //the input for the url field
-var titleInput = document.querySelector("#poster-title").value //the input for the title field
-var quoteInput = document.querySelector("#poster-quote").value //the input for the quote field
-var customPoster = new Poster(urlInput, titleInput, quoteInput)
-return customPoster;
-}
+var imageQuery = document.querySelector(".poster-img");
+var titleQuery = document.querySelector(".poster-title");
+var quoteQuery = document.querySelector(".poster-quote");
+
+var mainPageQuery = document.querySelector(".main-poster");
+var hiddenFormPageQuery = document.querySelector(".poster-form");
+var hiddenSavedPageQuery = document.querySelector(".saved-posters");
+
+var makePosterButton = document.querySelector(".show-form");
+var showRandomButton = document.querySelector(".show-random");
+var savePosterButton = document.querySelector(".save-poster");
+var showSavedButton = document.querySelector(".show-saved");
+var takeMeBackButton = document.querySelector(".show-main");
 
 // we've provided you with some data to work with 👇
 var images = [
@@ -109,32 +115,17 @@ var savedPosters = [];
 var currentPoster;
 
 // event listeners go here 👇
+showRandomButton.addEventListener("click", generateRandomPoster);
+takeMeBackButton.addEventListener("click", takeMeBack);
+makePosterButton.addEventListener("click", goToPosterForm);
+showSavedButton.addEventListener("click", goToSavedPosters);
+savePosterButton.addEventListener("click", saveUserPoster);
 
 //generate random poster upon inital loading
 document.querySelector("body").onload = function () {
-  document.getElementsByClassName("poster-img")[0].src = images[getRandomIndex(images)];
+  document.querySelector(".poster-img").src = images[getRandomIndex(images)];
   document.getElementsByClassName("poster-title")[0].innerHTML = titles[getRandomIndex(titles)];
   document.getElementsByClassName("poster-quote")[0].innerHTML = quotes[getRandomIndex(quotes)];
-};
-//return user to main page upon nevermind take me back button click
-document.getElementsByClassName("show-main")[0].onclick = function () {
-  document.getElementsByClassName("main-poster")[0].classList.toggle("hidden");
-  document.getElementsByClassName("poster-form")[0].classList.toggle("hidden");
-}
-
-//generate random poster upon random poster button click
-document.getElementsByClassName("show-random")[0].onclick = function () {
-  document.getElementsByClassName("poster-img")[0].src = images[getRandomIndex(images)];
-  document.getElementsByClassName("poster-title")[0].innerHTML = titles[getRandomIndex(titles)];
-  document.getElementsByClassName("poster-quote")[0].innerHTML = quotes[getRandomIndex(quotes)];
-  document.getElementsByClassName("save-poster")[0].disabled = false;
-};
-
-//switch to poster create form on "make your own poster" button click
-document.getElementsByClassName("show-form")[0].onclick = function () {
-  document.getElementsByClassName("main-poster")[0].classList.toggle("hidden");
-  document.getElementsByClassName("poster-form")[0].classList.toggle("hidden");
-  document.getElementsByClassName("save-poster")[0].disabled = false;
 };
 
 //creates user-poster on "show my poster" button click
@@ -149,65 +140,65 @@ document.getElementsByClassName("poster-form")[0].querySelector("form").onsubmit
   document.getElementsByClassName("poster-img")[0].src = urlInput; //displays user image on main page
   document.getElementsByClassName("poster-title")[0].innerHTML = titleInput; //displays user title on main page
   document.getElementsByClassName("poster-quote")[0].innerHTML = quoteInput; //displays user quote on main page
- }
+}
 //save user generated poster when save poster button is clicked
-document.getElementsByClassName("save-poster")[0].onclick = function () {
+function saveUserPoster() {
   event.preventDefault();
-  // document.getElementsByClassName("poster-form")[0].classList.toggle("hidden");
-  document.getElementsByClassName("saved-posters")[0].classList.toggle("hidden");
-  images.push(document.getElementsByClassName("poster-img")[0].src) //add custom image to image array
-  titles.push(document.getElementsByClassName("poster-title")[0].innerHTML)  //add custom title to title array
-  quotes.push(document.getElementsByClassName("poster-quote")[0].innerHTML)  //add custom quote to quote array
-  var customPoster = new Poster(images[images.length-1], titles[titles.length-1], quotes[quotes.length-1]);
-  console.log(customPoster);
+  hiddenSavedPageQuery.classList.toggle("hidden");
+  images.push(imageQuery.src) //add custom image to image array
+  titles.push(titleQuery.innerHTML) //add custom title to title array
+  quotes.push(quoteQuery.innerHTML) //add custom quote to quote array
+  var customPoster = new Poster(images[images.length - 1], titles[titles.length - 1], quotes[quotes.length - 1]);
   savedPosters.push(customPoster);
   document.getElementsByClassName("save-poster")[0].disabled = true;
- }
-//show saved posters upon show saved posters button click
- // document.getElementsByClassName("show-saved")[0].onclick = function () {
- //   document.getElementsByClassName("main-poster")[0].classList.toggle("hidden");
- //   document.getElementsByClassName("saved-posters")[0].classList.toggle("hidden");
- //   console.log(savedPosters[0].imageURL);
- //   document.getElementsByClassName("saved-posters-grid")[0].innerHTML = `
- //    <p>"Hello"</p>
- //    <img src='savedPosters[0].imageURL'>
- //   `;
- //   document.getElementsByClassName("saved-posters-grid")[0].innerHTML = `
- //    <p>
- //    ${document.getElementsByClassName("poster-img")[0].src = savedPosters[0].imageURL};
- //    ${document.getElementsByClassName("poster-title")[0].innerHTML = savedPosters[0].title};
- //    ${document.getElementsByClassName("poster-quote")[0].innerHTML = savedPosters[0].quote};
- //    </p>
- //
- //   `;
+  createPosterForGrid(savedPosters); //we want this one here, not in the function goToSavedPosters
+  //but it kijrfluiel
+}
 
+function createPosterForGrid(savedPosters) {
+  for (var i = 0; i <= savedPosters.length - 1; i++) {
+    document.getElementsByClassName("saved-posters-grid")[0].innerHTML += `
+<div class="mini-poster">
+<span><img src="${savedPosters[i].imageURL}"></span>
+<h2>${savedPosters[i].title}</h2>
+<h4>${savedPosters[i].quote}</h4>
+</div>`
+    console.log("fourth time", savedPosters[i]) //they are being pushed to the array correctly
+    //but they are displaying the first poster twice
+  }
+}
 
-    //inserts the saved posters into the saved posters article
- }
 //return to main after clicking back to main button
- document.getElementsByClassName("back-to-main")[0].onclick = function () {
-   document.getElementsByClassName("main-poster")[0].classList.toggle("hidden");
-   document.getElementsByClassName("saved-posters")[0].classList.toggle("hidden");
- }
-//console.log(customPoster.id) //can access that specific poster by this id
-
-
-
-//savedPosters.push(customPoster) //adds poster into saved posters array on "save this poster" button push
-
-//display the poster that was just created
-
+document.getElementsByClassName("back-to-main")[0].onclick = function () {
+  document.getElementsByClassName("main-poster")[0].classList.toggle("hidden");
+  document.getElementsByClassName("saved-posters")[0].classList.toggle("hidden");
+}
 
 // functions and event handlers go here 👇
 // (we've provided one for you to get you started)!
 function getRandomIndex(array) {
   return Math.floor(Math.random() * array.length);
 }
-// class Poster {
-//   constructor(imageURL, title, quote) {
-//     this.id = Date.now();
-//     this.imageURL = imageURL;
-//     this.title = title;
-//     this.quote = quote;
-//   }
-// }
+
+function generateRandomPoster() {
+  imageQuery.src = images[getRandomIndex(images)];
+  titleQuery.innerHTML = titles[getRandomIndex(titles)];
+  quoteQuery.innerHTML = quotes[getRandomIndex(quotes)];
+  savePosterButton.disabled = false;
+};
+
+function takeMeBack() {
+  mainPageQuery.classList.toggle("hidden");
+  hiddenFormPageQuery.classList.toggle("hidden");
+}
+
+function goToPosterForm() {
+  mainPageQuery.classList.toggle("hidden");
+  hiddenFormPageQuery.classList.toggle("hidden");
+  savePosterButton.disabled = false;
+};
+
+function goToSavedPosters() {
+  mainPageQuery.classList.toggle("hidden");
+  hiddenSavedPageQuery.classList.toggle("hidden");
+}
