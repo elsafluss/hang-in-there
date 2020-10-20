@@ -21,6 +21,7 @@ The site will display a randomly generated poster when it is loaded.
 All currently saved posters are displayed, including any user-generated posters that were saved.
 <ul>
   <li>Back to Main displays the main page again.</li>
+  <li>Double clicking a saved poster image will remove it from the saved posters</li>
 </ul>
   
 ## Make Your Own Poster Page. 
