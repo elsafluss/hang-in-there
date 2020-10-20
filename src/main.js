@@ -1,4 +1,3 @@
-// query selector variables go here 👇
 var imageQuery = document.querySelector(".poster-img");
 var titleQuery = document.querySelector(".poster-title");
 var quoteQuery = document.querySelector(".poster-quote");
@@ -20,7 +19,6 @@ var miniPosters = document.querySelector(".mini-posters");
 var body = document.querySelector("body")
 var form = document.querySelector("form")
 
-// we've provided you with some data to work with 👇
 var images = [
   "./assets/bees.jpg",
   "./assets/bridge.jpg",
@@ -121,7 +119,6 @@ var quotes = [
 var savedPosters = [];
 var currentPoster;
 
-// event listeners go here 👇
 showRandomButton.addEventListener("click", generateRandomPoster);
 takeMeBackButton.addEventListener("click", takeMeBack);
 makePosterButton.addEventListener("click", goToPosterForm);
@@ -131,8 +128,6 @@ showMyPosterButton.addEventListener("click", showThePoster)
 backToMainButton.addEventListener("click", goToMain)
 savedPostersGrid.addEventListener("dblclick", getPosterPosition)
 
-// functions and event handlers go here 👇
-//displays the saved posters on the saved posters page, in a grid
 function createPosterForGrid(savedPosters) {
   for (var i = 0; i <= savedPosters.length - 1; i++) {
     document.getElementsByClassName("saved-posters-grid")[0].innerHTML += `
@@ -144,16 +139,12 @@ function createPosterForGrid(savedPosters) {
   }
 }
 
-//🌀  RANDOM POSTERS  🌀
-//generates random number, up to the length of an array
 function getRandomIndex(array) {
   return Math.floor(Math.random() * array.length);
 }
 
-//generate and show random poster upon inital loading
 body.onload = loadRandomPoster
 
-//generates random poster when Show Random Poster button is clicked
 function generateRandomPoster() {
   imageQuery.src = images[getRandomIndex(images)];
   titleQuery.innerHTML = titles[getRandomIndex(titles)];
@@ -161,43 +152,36 @@ function generateRandomPoster() {
   savePosterButton.disabled = false;
 };
 
-//gets a random element from each array
 function loadRandomPoster() {
   imageQuery.src = images[getRandomIndex(images)];
   titleQuery.innerHTML = titles[getRandomIndex(titles)];
   quoteQuery.innerHTML = quotes[getRandomIndex(quotes)];
 };
 
-//⬇️  NAVIGATION  ⬇️
-//displays main page, from saved posters page
 function goToMain() {
   mainPageQuery.classList.toggle("hidden");
   hiddenSavedPageQuery.classList.toggle("hidden");
   savedPostersGrid.innerHTML = [];
 }
 
-//displays main page, from poster form page
 function takeMeBack() {
   mainPageQuery.classList.toggle("hidden");
   hiddenFormPageQuery.classList.toggle("hidden");
 }
 
-//displays make your own poster page
 function goToPosterForm() {
   mainPageQuery.classList.toggle("hidden");
   hiddenFormPageQuery.classList.toggle("hidden");
   savePosterButton.disabled = false;
 };
 
-//displays saved posters grid page
+
 function goToSavedPosters() {
   mainPageQuery.classList.toggle("hidden");
   hiddenSavedPageQuery.classList.toggle("hidden");
   createPosterForGrid(savedPosters);
 }
 
-//📄  FORM  📄
-//display user-generated poster, from form page
 function showThePoster() {
   event.preventDefault();
   var urlInput = document.querySelector("#poster-image-url").value
@@ -211,8 +195,7 @@ function showThePoster() {
   quoteQuery.innerHTML = quoteInput;
 }
 
-//get user-generated poster information and save it, on main page
-function saveUserPoster() {
+function saveUserPoster(event) {
   event.preventDefault();
   images.push(imageQuery.src)
   titles.push(titleQuery.innerHTML)
@@ -222,20 +205,21 @@ function saveUserPoster() {
   savePosterButton.disabled = true;
 }
 
-//🛑  DELETING POSTERS  🛑
-//removes selected poster from savedPosters array, clears the grid, and redraws it
 function deleteThisPoster(timeStamp) {
-  //add alert, ask yes/no
-  for (var i = 0; i < savedPosters.length; i++) {
-    if (savedPosters[i]["id"] == timeStamp) {
-      savedPosters.splice(i, 1)
-      savedPostersGrid.innerHTML = []
-      createPosterForGrid(savedPosters)
+  var answer = window.confirm("Delete this poster?")
+  if (answer) {
+    for (var i = 0; i < savedPosters.length; i++) {
+      if (savedPosters[i]["id"] == timeStamp) {
+        savedPosters.splice(i, 1)
+        savedPostersGrid.innerHTML = []
+        createPosterForGrid(savedPosters)
+      }
     }
+  } else {
+    return
   }
 }
 
-//gets unique ID for each poster
 function getPosterPosition(e) {
   switch (e.target.nodeName) {
     case "DIV":
