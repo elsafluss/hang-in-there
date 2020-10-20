@@ -12,9 +12,13 @@ var showRandomButton = document.querySelector(".show-random");
 var savePosterButton = document.querySelector(".save-poster");
 var showSavedButton = document.querySelector(".show-saved");
 var takeMeBackButton = document.querySelector(".show-main");
+var showMyPosterButton = document.querySelector(".make-poster");
+var backToMainButton = document.querySelector(".back-to-main")
 
 var savedPostersGrid = document.querySelector(".saved-posters-grid");
 var miniPosters = document.querySelector(".mini-posters");
+var body = document.querySelector("body")
+var form = document.querySelector("form")
 
 // we've provided you with some data to work with 👇
 var images = [
@@ -123,77 +127,33 @@ takeMeBackButton.addEventListener("click", takeMeBack);
 makePosterButton.addEventListener("click", goToPosterForm);
 showSavedButton.addEventListener("click", goToSavedPosters);
 savePosterButton.addEventListener("click", saveUserPoster);
-// miniPosters.addEventListener("dblclick", getPosterPosition);
+showMyPosterButton.addEventListener("click", showThePoster)
+backToMainButton.addEventListener("click", goToMain)
+savedPostersGrid.addEventListener("dblclick", getPosterPosition)
 
-
-// savedPostersGrid.addEventListener("dblclick",test);
-
-// function miniposterLocation() {
-//   (".saved-posters-grid").on("dblclick", "div", function(e){
-//     getPosterPosition($(this).index());
-//     console.log("test");
-//     console.log("getPosterPosition");
-//   })
-// };
-
-
-
-//generate random poster upon inital loading
-document.querySelector("body").onload = function () {
-  document.querySelector(".poster-img").src = images[getRandomIndex(images)];
-  document.getElementsByClassName("poster-title")[0].innerHTML = titles[getRandomIndex(titles)];
-  document.getElementsByClassName("poster-quote")[0].innerHTML = quotes[getRandomIndex(quotes)];
-};
-
-//creates user-poster on "show my poster" button click
-document.getElementsByClassName("poster-form")[0].querySelector("form").onsubmit = function (event) {
-  event.preventDefault();
-  var urlInput = document.querySelector("#poster-image-url").value //the input for the url field
-  var titleInput = document.querySelector("#poster-title").value //the input for the title field
-  var quoteInput = document.querySelector("#poster-quote").value //the input for the quote field
-  var customPoster = new Poster(urlInput, titleInput, quoteInput);
-  document.getElementsByClassName("main-poster")[0].classList.toggle("hidden"); //toggles main page and form
-  document.getElementsByClassName("poster-form")[0].classList.toggle("hidden");
-  document.getElementsByClassName("poster-img")[0].src = urlInput; //displays user image on main page
-  document.getElementsByClassName("poster-title")[0].innerHTML = titleInput; //displays user title on main page
-  document.getElementsByClassName("poster-quote")[0].innerHTML = quoteInput; //displays user quote on main page
-
-}
-//save user generated poster when save poster button is clicked
-function saveUserPoster() {
-  event.preventDefault();
-  images.push(imageQuery.src) //add custom image to image array
-  titles.push(titleQuery.innerHTML) //add custom title to title array
-  quotes.push(quoteQuery.innerHTML) //add custom quote to quote array
-  var customPoster = new Poster(images[images.length - 1], titles[titles.length - 1], quotes[quotes.length - 1]);
-  savedPosters.push(customPoster);
-  document.getElementsByClassName("save-poster")[0].disabled = true;
-}
-
+// functions and event handlers go here 👇
+//displays the saved posters on the saved posters page, in a grid
 function createPosterForGrid(savedPosters) {
   for (var i = 0; i <= savedPosters.length - 1; i++) {
     document.getElementsByClassName("saved-posters-grid")[0].innerHTML += `
-<div class="mini-poster">
-<span><img src="${savedPosters[i].imageURL}"></span>
-<h2>${savedPosters[i].title}</h2>
-<h4>${savedPosters[i].quote}</h4>
-</div>`
+      <div class="mini-poster" id=${savedPosters[i].id}>
+        <span><img src="${savedPosters[i].imageURL}"></span>
+        <h2>${savedPosters[i].title}</h2>
+        <h4>${savedPosters[i].quote}</h4>
+      </div>`
   }
 }
 
-//return to main after clicking back to main button
-document.getElementsByClassName("back-to-main")[0].onclick = function () {
-  document.getElementsByClassName("main-poster")[0].classList.toggle("hidden");
-  document.getElementsByClassName("saved-posters")[0].classList.toggle("hidden");
-  document.getElementsByClassName("saved-posters-grid")[0].innerHTML = [];
-}
-
-// functions and event handlers go here 👇
-// (we've provided one for you to get you started)!
+//🌀  RANDOM POSTERS  🌀
+//generates random number, up to the length of an array
 function getRandomIndex(array) {
   return Math.floor(Math.random() * array.length);
 }
 
+//generate and show random poster upon inital loading
+body.onload = loadRandomPoster
+
+//generates random poster when Show Random Poster button is clicked
 function generateRandomPoster() {
   imageQuery.src = images[getRandomIndex(images)];
   titleQuery.innerHTML = titles[getRandomIndex(titles)];
@@ -201,27 +161,97 @@ function generateRandomPoster() {
   savePosterButton.disabled = false;
 };
 
+//gets a random element from each array
+function loadRandomPoster() {
+  imageQuery.src = images[getRandomIndex(images)];
+  titleQuery.innerHTML = titles[getRandomIndex(titles)];
+  quoteQuery.innerHTML = quotes[getRandomIndex(quotes)];
+};
+
+//⬇️  NAVIGATION  ⬇️
+//displays main page, from saved posters page
+function goToMain() {
+  mainPageQuery.classList.toggle("hidden");
+  hiddenSavedPageQuery.classList.toggle("hidden");
+  savedPostersGrid.innerHTML = [];
+}
+
+//displays main page, from poster form page
 function takeMeBack() {
   mainPageQuery.classList.toggle("hidden");
   hiddenFormPageQuery.classList.toggle("hidden");
 }
 
+//displays make your own poster page
 function goToPosterForm() {
   mainPageQuery.classList.toggle("hidden");
   hiddenFormPageQuery.classList.toggle("hidden");
   savePosterButton.disabled = false;
 };
 
+//displays saved posters grid page
 function goToSavedPosters() {
   mainPageQuery.classList.toggle("hidden");
   hiddenSavedPageQuery.classList.toggle("hidden");
   createPosterForGrid(savedPosters);
 }
-function getPosterPosition(){
-  const colCount = 3;
-  const length = savedPosters.length -1;
-  const rowPosition = Math.floor(length/ colCount);
-  const colPosition = length % colCount;
-  var posterPostion = {row: rowPosition, column: colPosition};
-  console.log(posterPostion);
+
+//📄  FORM  📄
+//display user-generated poster, from form page
+function showThePoster() {
+  event.preventDefault();
+  var urlInput = document.querySelector("#poster-image-url").value
+  var titleInput = document.querySelector("#poster-title").value
+  var quoteInput = document.querySelector("#poster-quote").value
+  var customPoster = new Poster(urlInput, titleInput, quoteInput);
+  mainPageQuery.classList.toggle("hidden");
+  hiddenFormPageQuery.classList.toggle("hidden");
+  imageQuery.src = urlInput;
+  titleQuery.innerHTML = titleInput;
+  quoteQuery.innerHTML = quoteInput;
+}
+
+//get user-generated poster information and save it, on main page
+function saveUserPoster() {
+  event.preventDefault();
+  images.push(imageQuery.src)
+  titles.push(titleQuery.innerHTML)
+  quotes.push(quoteQuery.innerHTML)
+  var customPoster = new Poster(images[images.length - 1], titles[titles.length - 1], quotes[quotes.length - 1]);
+  savedPosters.push(customPoster);
+  savePosterButton.disabled = true;
+}
+
+//🛑  DELETING POSTERS  🛑
+//removes selected poster from savedPosters array, clears the grid, and redraws it
+function deleteThisPoster(timeStamp) {
+  //add alert, ask yes/no
+  for (var i = 0; i < savedPosters.length; i++) {
+    if (savedPosters[i]["id"] == timeStamp) {
+      savedPosters.splice(i, 1)
+      savedPostersGrid.innerHTML = []
+      createPosterForGrid(savedPosters)
+    }
+  }
+}
+
+//gets unique ID for each poster
+function getPosterPosition(e) {
+  switch (e.target.nodeName) {
+    case "DIV":
+      deleteThisPoster(e.target.id);
+      break;
+    case "IMG":
+      deleteThisPoster(e.target.parentNode.parentNode.id);
+      break;
+    case "SPAN":
+      deleteThisPoster(e.target.parentNode.id);
+      break;
+    case "H2":
+      deleteThisPoster(e.target.parentNode.id);
+      break;
+    case "H3":
+      deleteThisPoster(e.target.parentNode.id);
+      break;
+  }
 }
