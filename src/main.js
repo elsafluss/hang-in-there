@@ -3,8 +3,8 @@ var titleQuery = document.querySelector(".poster-title");
 var quoteQuery = document.querySelector(".poster-quote");
 
 var mainPageQuery = document.querySelector(".main-poster");
-var hiddenFormPageQuery = document.querySelector(".poster-form");
-var hiddenSavedPageQuery = document.querySelector(".saved-posters");
+var formPageQuery = document.querySelector(".poster-form");
+var savedPageQuery = document.querySelector(".saved-posters");
 
 var makePosterButton = document.querySelector(".show-form");
 var showRandomButton = document.querySelector(".show-random");
@@ -12,12 +12,11 @@ var savePosterButton = document.querySelector(".save-poster");
 var showSavedButton = document.querySelector(".show-saved");
 var takeMeBackButton = document.querySelector(".show-main");
 var showMyPosterButton = document.querySelector(".make-poster");
-var backToMainButton = document.querySelector(".back-to-main")
+var backToMainButton = document.querySelector(".back-to-main");
 
 var savedPostersGrid = document.querySelector(".saved-posters-grid");
-var miniPosters = document.querySelector(".mini-posters");
-var body = document.querySelector("body")
-var form = document.querySelector("form")
+var body = document.querySelector("body");
+var form = document.querySelector("form");
 
 var images = [
   "./assets/bees.jpg",
@@ -117,16 +116,15 @@ var quotes = [
   "A champion is defined not by their wins but by how they can recover when they fall."
 ];
 var savedPosters = [];
-var currentPoster;
 
 showRandomButton.addEventListener("click", generateRandomPoster);
 takeMeBackButton.addEventListener("click", takeMeBack);
 makePosterButton.addEventListener("click", goToPosterForm);
 showSavedButton.addEventListener("click", goToSavedPosters);
 savePosterButton.addEventListener("click", saveUserPoster);
-showMyPosterButton.addEventListener("click", showThePoster)
-backToMainButton.addEventListener("click", goToMain)
-savedPostersGrid.addEventListener("dblclick", getPosterPosition)
+showMyPosterButton.addEventListener("click", showThePoster);
+backToMainButton.addEventListener("click", goToMain);
+savedPostersGrid.addEventListener("dblclick", getPosterPosition);
 
 function createPosterForGrid(savedPosters) {
   for (var i = 0; i <= savedPosters.length - 1; i++) {
@@ -137,13 +135,13 @@ function createPosterForGrid(savedPosters) {
         <h4>${savedPosters[i].quote}</h4>
       </div>`
   }
-}
+};
 
 function getRandomIndex(array) {
   return Math.floor(Math.random() * array.length);
-}
+};
 
-body.onload = loadRandomPoster
+body.onload = loadRandomPoster;
 
 function generateRandomPoster() {
   imageQuery.src = images[getRandomIndex(images)];
@@ -160,65 +158,64 @@ function loadRandomPoster() {
 
 function goToMain() {
   mainPageQuery.classList.toggle("hidden");
-  hiddenSavedPageQuery.classList.toggle("hidden");
+  savedPageQuery.classList.toggle("hidden");
   savedPostersGrid.innerHTML = [];
-}
+};
 
 function takeMeBack() {
   mainPageQuery.classList.toggle("hidden");
-  hiddenFormPageQuery.classList.toggle("hidden");
-}
+  formPageQuery.classList.toggle("hidden");
+};
 
 function goToPosterForm() {
   mainPageQuery.classList.toggle("hidden");
-  hiddenFormPageQuery.classList.toggle("hidden");
+  formPageQuery.classList.toggle("hidden");
   savePosterButton.disabled = false;
 };
 
-
 function goToSavedPosters() {
   mainPageQuery.classList.toggle("hidden");
-  hiddenSavedPageQuery.classList.toggle("hidden");
+  savedPageQuery.classList.toggle("hidden");
   createPosterForGrid(savedPosters);
-}
+};
 
-function showThePoster() {
+function showThePoster(event) {
   event.preventDefault();
-  var urlInput = document.querySelector("#poster-image-url").value
-  var titleInput = document.querySelector("#poster-title").value
-  var quoteInput = document.querySelector("#poster-quote").value
+  var urlInput = document.querySelector("#poster-image-url").value;
+  var titleInput = document.querySelector("#poster-title").value;
+  var quoteInput = document.querySelector("#poster-quote").value;
   var customPoster = new Poster(urlInput, titleInput, quoteInput);
   mainPageQuery.classList.toggle("hidden");
-  hiddenFormPageQuery.classList.toggle("hidden");
+  formPageQuery.classList.toggle("hidden");
   imageQuery.src = urlInput;
   titleQuery.innerHTML = titleInput;
   quoteQuery.innerHTML = quoteInput;
-}
+};
 
 function saveUserPoster(event) {
   event.preventDefault();
-  images.push(imageQuery.src)
-  titles.push(titleQuery.innerHTML)
-  quotes.push(quoteQuery.innerHTML)
+  images.push(imageQuery.src);
+  titles.push(titleQuery.innerHTML);
+  quotes.push(quoteQuery.innerHTML);
   var customPoster = new Poster(images[images.length - 1], titles[titles.length - 1], quotes[quotes.length - 1]);
   savedPosters.push(customPoster);
   savePosterButton.disabled = true;
-}
+};
 
 function deleteThisPoster(timeStamp) {
-  var answer = window.confirm("Delete this poster?")
+  var answer = window.confirm("Delete this poster?");
   if (answer) {
     for (var i = 0; i < savedPosters.length; i++) {
       if (savedPosters[i]["id"] == timeStamp) {
-        savedPosters.splice(i, 1)
-        savedPostersGrid.innerHTML = []
-        createPosterForGrid(savedPosters)
+        savedPosters.splice(i, 1);
+        savedPostersGrid.innerHTML = [];
+        createPosterForGrid(savedPosters);
       }
     }
   } else {
     return
   }
-}
+};
 
 function getPosterPosition(e) {
   switch (e.target.nodeName) {
@@ -238,4 +235,4 @@ function getPosterPosition(e) {
       deleteThisPoster(e.target.parentNode.id);
       break;
   }
-}
+};
